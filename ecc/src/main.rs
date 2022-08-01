@@ -182,6 +182,129 @@ pub fn mul(x: [u64;6], y: [u64;6]) -> [u64;6] {
     montgomery_reduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
 }
 
+pub fn square(x: [u64;6]) -> [u64;6] {
+    let (t1, carry) = mac(0, x[0], x[1], 0);
+    let (t2, carry) = mac(0, x[0], x[2], carry);
+    let (t3, carry) = mac(0, x[0], x[3], carry);
+    let (t4, carry) = mac(0, x[0], x[4], carry);
+    let (t5, t6) = mac(0, x[0], x[5], carry);
+
+    let (t3, carry) = mac(t3, x[1], x[2], 0);
+    let (t4, carry) = mac(t4, x[1], x[3], carry);
+    let (t5, carry) = mac(t5, x[1], x[4], carry);
+    let (t6, t7) = mac(t6, x[1], x[5], carry);
+
+    let (t5, carry) = mac(t5, x[2], x[3], 0);
+    let (t6, carry) = mac(t6, x[2], x[4], carry);
+    let (t7, t8) = mac(t7, x[2], x[5], carry);
+
+    let (t7, carry) = mac(t7, x[3], x[4], 0);
+    let (t8, t9) = mac(t8, x[3], x[5], carry);
+
+    let (t9, t10) = mac(t9, x[4], x[5], 0);
+
+    let t11 = t10 >> 63;
+    let t10 = (t10 << 1) | (t9 >> 63);
+    let t9 = (t9 << 1) | (t8 >> 63);
+    let t8 = (t8 << 1) | (t7 >> 63);
+    let t7 = (t7 << 1) | (t6 >> 63);
+    let t6 = (t6 << 1) | (t5 >> 63);
+    let t5 = (t5 << 1) | (t4 >> 63);
+    let t4 = (t4 << 1) | (t3 >> 63);
+    let t3 = (t3 << 1) | (t2 >> 63);
+    let t2 = (t2 << 1) | (t1 >> 63);
+    let t1 = t1 << 1;
+
+    let (t0, carry) = mac(0, x[0], x[0], 0);
+    println!("{}", t0);
+    let (t1, carry) = adc(t1, 0, carry);
+    println!("{}", t1);
+    let (t2, carry) = mac(t2, x[1], x[1], carry);
+    println!("{}", t2);
+    let (t3, carry) = adc(t3, 0, carry);
+    println!("{}", t3);
+    let (t4, carry) = mac(t4, x[2], x[2], carry);
+    println!("{}", t4);
+    let (t5, carry) = adc(t5, 0, carry);
+    println!("{}", t5);
+    let (t6, carry) = mac(t6, x[3], x[3], carry);
+    println!("{}", t6);
+    let (t7, carry) = adc(t7, 0, carry);
+    println!("{}", t7);
+    let (t8, carry) = mac(t8, x[4], x[4], carry);
+    println!("{}", t8);
+    let (t9, carry) = adc(t9, 0, carry);
+    println!("{}", t9);
+    let (t10, carry) = mac(t10, x[5], x[5], carry);
+    println!("{}", t10);
+    let (t11, _) = adc(t11, 0, carry);
+    println!("{}", t11);
+
+    montgomery_reduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
+}
+
+pub fn square2(x: [u64;6]) -> [u64;6] {
+    let (t1, carry) = mac(0, x[0], x[1], 0);
+    let (t2, carry) = mac(0, x[0], x[2], carry);
+    let (t3, carry) = mac(0, x[0], x[3], carry);
+    let (t4, carry) = mac(0, x[0], x[4], carry);
+    let (t5, t6) = mac(0, x[0], x[5], carry);
+
+    let (t3, carry) = mac(t3, x[1], x[2], 0);
+    let (t4, carry) = mac(t4, x[1], x[3], carry);
+    let (t5, carry) = mac(t5, x[1], x[4], carry);
+    let (t6, t7) = mac(t6, x[1], x[5], carry);
+
+    let (t5, carry) = mac(t5, x[2], x[3], 0);
+    let (t6, carry) = mac(t6, x[2], x[4], carry);
+    let (t7, t8) = mac(t7, x[2], x[5], carry);
+
+    let (t7, carry) = mac(t7, x[3], x[4], 0);
+    let (t8, t9) = mac(t8, x[3], x[5], carry);
+
+    let (t9, t10) = mac(t9, x[4], x[5], 0);
+
+    let t11 = t10 >> 63;
+    let t10 = (t10 << 1) | (t9 >> 63);
+    let t9 = (t9 << 1) | (t8 >> 63);
+    let t8 = (t8 << 1) | (t7 >> 63);
+    let t7 = (t7 << 1) | (t6 >> 63);
+    let t6 = (t6 << 1) | (t5 >> 63);
+    let t5 = (t5 << 1) | (t4 >> 63);
+    let t4 = (t4 << 1) | (t3 >> 63);
+    let t3 = (t3 << 1) | (t2 >> 63);
+    let t2 = (t2 << 1) | (t1 >> 63);
+    let t1 = t1 << 1;
+
+    let (t0, carry) = mac(0, x[0], x[0], 0);
+    // println!("{}", t0);
+    let (t1, carry) = adc(t1, 0, carry);
+    // println!("{}", t1);
+    let (t2, carry) = mac(t2, x[1], x[1], carry);
+    // println!("{}", t2);
+    let (t3, carry) = adc(t3, 0, carry);
+    // println!("{}", t3);
+    let (t4, carry) = mac(t4, x[2], x[2], carry);
+    // println!("{}", t4);
+    let (t5, carry) = adc(t5, 0, carry);
+    // println!("{}", t5);
+    let (t6, carry) = mac(t6, x[3], x[3], carry);
+    // println!("{}", t5);
+    let (t7, carry) = adc(t7, 0, carry);
+    // println!("{}", t7);
+    let (t8, carry) = mac(t8, x[4], x[4], carry);
+    // println!("{}", t8);
+    let (t9, carry) = adc(t9, 0, carry);
+    // println!("{}", t9);
+    let (t10, carry) = mac(t10, x[5], x[5], carry);
+    // println!("{}", t10);
+    let (t11, _) = adc(t11, 0, carry);
+    //println!("{}", t11);
+
+    //let res: [u64;12] = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
+    montgomery_reduce(t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
+}
+
 fn main () {
     //let x: [u64;6] = [13402431016077863593, 2210141511517208575, 7435674573564081700, 7239337960414712511, 5412103778470702295, 1873798617647539866];
     //let y: [u64;6] = [13402431016077863594, 2210141511517208575, 7435674573564081700, 7239337960414712511, 5412103778470702295, 1873798617647539866];
@@ -208,11 +331,48 @@ fn main () {
     // println!("{}",res1[4]);
     // println!("{}",res1[5]);
 
-    let res2 = montgomery_reduce(13282407956253574712,7557322358563246340,14991082624209354397,6631139461101160670,10719928016004921607,1730705806359781376,0,0,0,0,0,0);
+    // let res2 = montgomery_reduce(13282407956253574712,7557322358563246340,14991082624209354397,6631139461101160670,10719928016004921607,1730705806359781376,0,0,0,0,0,0);
+    // println!("{}",res2[0]);
+    // println!("{}",res2[1]);
+    // println!("{}",res2[2]);
+    // println!("{}",res2[3]);
+    // println!("{}",res2[4]);
+    // println!("{}",res2[5]);
+
+    let ls: [u64;6] = [0xd215_d276_8e83_191b,//15138237129114720539
+        0x5085_d80f_8fb2_8261,//5802281256283701857
+        0xce9a_032d_df39_3a56,//14887215013780077142
+        0x3e9c_4fff_2ca0_c4bb,//4511568884102382779
+        0x6436_b6f7_f4d9_5dfb,//7221160228616232443
+        0x1060_6628_ad4a_4d90];//1180055427263122832
+    
+    // let res = square(ls);
+    // println!("{:0x}",res[0]);
+    // println!("{:0x}",res[1]);
+    // println!("{:0x}",res[2]);
+    // println!("{:0x}",res[3]);
+    // println!("{:0x}",res[4]);
+    // println!("{:0x}",res[5]);
+
+    let res2 = square2(ls);
     println!("{}",res2[0]);
     println!("{}",res2[1]);
     println!("{}",res2[2]);
     println!("{}",res2[3]);
     println!("{}",res2[4]);
     println!("{}",res2[5]);
+    // let mul_res = mul(ls,ls);
+    // println!("{:0x}",mul_res[0]);
+    // println!("{:0x}",mul_res[1]);
+    // println!("{:0x}",mul_res[2]);
+    // println!("{:0x}",mul_res[3]);
+    // println!("{:0x}",mul_res[4]);
+    // println!("{:0x}",mul_res[5]);
+    // println!("{}",res[0] == res2[0] );
+    // println!("{}",res[1] == res2[1] );
+    // println!("{}",res[2] == res2[2] );
+    // println!("{}",res[3] == res2[3] );
+    // println!("{}",res[4] == res2[4] );
+    // println!("{}",res[5] == res2[5] );
+
 }   
